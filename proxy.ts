@@ -1,41 +1,19 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { hasAdminSession, isAdminAuthenticationConfigured } from "@/lib/admin-auth";
 
-const adminUsername = process.env.ADMIN_USERNAME ?? "admin";
-const adminPassword = process.env.ADMIN_PASSWORD;
-
-export function proxy(request: NextRequest) {
-  if (!request.nextUrl.pathname.startsWith("/admin")) {
-    return NextResponse.next();
+export async function proxy(request: NextRequest) {
+  if (!isAdminAuthenticationConfigured()) return NextResponse.next();
+  const pathname = request.nextUrl.pathname;
+  if (pathname === "/api/admin/login" || pathname === "/api/admin/logout") return NextResponse.next();
+  if (pathname === "/admin/login") {
+    return (await hasAdminSession(request)) ? NextResponse.redirect(new URL("/admin", request.url)) : NextResponse.next();
   }
-
-  if (!adminPassword) {
-    return NextResponse.next();
-  }
-
-  const authorization = request.headers.get("authorization");
-
-  if (authorization) {
-    const [scheme, encoded] = authorization.split(" ");
-
-    if (scheme === "Basic" && encoded) {
-      const decoded = atob(encoded);
-      const [username, password] = decoded.split(":");
-
-      if (username === adminUsername && password === adminPassword) {
-        return NextResponse.next();
-      }
-    }
-  }
-
-  return new NextResponse("Authentication required", {
-    status: 401,
-    headers: {
-      "WWW-Authenticate": 'Basic realm="Admin Area"',
-    },
-  });
+  if (await hasAdminSession(request)) return NextResponse.next();
+  if (pathname.startsWith("/api/")) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const loginUrl = new URL("/admin/login", request.url);
+  loginUrl.searchParams.set("next", pathname);
+  return NextResponse.redirect(loginUrl);
 }
 
-export const config = {
-  matcher: ["/admin/:path*"],
-};
+export const config = { matcher: ["/admin/:path*", "/api/admin/:path*", "/api/orders/:path*/status"] };

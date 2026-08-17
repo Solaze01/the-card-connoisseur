@@ -39,6 +39,10 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-supabase-publishable-key
 SUPABASE_URL=https://your-project-id.supabase.co
 SUPABASE_SECRET_KEY=your-supabase-secret-key
 SUPABASE_PRODUCT_IMAGES_BUCKET=product-images
+
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=choose-a-strong-password
+ADMIN_SESSION_SECRET=use-a-long-random-secret
 ```
 
 Notes:
@@ -46,6 +50,7 @@ Notes:
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` is safe for client-side use.
 - `SUPABASE_SECRET_KEY` is server-only and must never be exposed in the browser.
 - `SUPABASE_PRODUCT_IMAGES_BUCKET` is optional. It defaults to `product-images`.
+- `ADMIN_USERNAME`, `ADMIN_PASSWORD`, and `ADMIN_SESSION_SECRET` protect `/admin`. Set all three in production; `ADMIN_SESSION_SECRET` should be a long random value, separate from the password.
 - The server-side order creation logic uses [lib/supabase-admin.ts](C:/Users/USER/The%20Card%20Connoisseur/lib/supabase-admin.ts).
 
 ### 3. Set up product image uploads

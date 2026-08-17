@@ -33,12 +33,19 @@ export function AdminShell({ children }: AdminShellProps) {
               </p>
               <p className="text-sm text-foreground/65">Admin area</p>
             </div>
-            <Link
-              href="/"
-              className="rounded-full border border-zinc-300 bg-surface-strong px-4 py-2 text-sm font-medium text-foreground/80 shadow-[0_1px_0_rgba(255,255,255,0.85)_inset] transition-colors hover:bg-white"
-            >
-              View Storefront
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link
+                href="/"
+                className="rounded-full border border-zinc-300 bg-surface-strong px-4 py-2 text-sm font-medium text-foreground/80 shadow-[0_1px_0_rgba(255,255,255,0.85)_inset] transition-colors hover:bg-white"
+              >
+                View Storefront
+              </Link>
+              <form action="/api/admin/logout" method="post">
+                <button className="rounded-full border border-zinc-300 bg-surface-strong px-4 py-2 text-sm font-medium text-foreground/80 shadow-[0_1px_0_rgba(255,255,255,0.85)_inset] transition-colors hover:bg-white">
+                  Sign out
+                </button>
+              </form>
+            </div>
           </div>
         </div>
 
