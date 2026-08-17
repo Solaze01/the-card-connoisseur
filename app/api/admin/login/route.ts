@@ -4,7 +4,9 @@ import { adminSessionCookie, createAdminSession, credentialsAreValid, isAdminAut
 
 export async function POST(request: Request) {
   if (!isAdminAuthenticationConfigured()) {
-    return NextResponse.json({ error: "Admin authentication is not configured on this server." }, { status: 503 });
+    const loginUrl = new URL("/admin/login", request.url);
+    loginUrl.searchParams.set("error", "configuration");
+    return NextResponse.redirect(loginUrl, { status: 303 });
   }
   try {
     const formData = await request.formData();
