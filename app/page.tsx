@@ -2,6 +2,8 @@ import { HomePage } from "@/components/home-page";
 import { products as sampleProducts } from "@/data/products";
 import { getStorefrontProducts } from "@/lib/products/admin-products";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   let products = sampleProducts;
 
